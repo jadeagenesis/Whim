@@ -1,0 +1,279 @@
+/* =========================================================
+   1. DESIGN TOKENS
+   Variables let you define a value once and reuse it.
+   Change --color-primary here and every use of it updates.
+   ========================================================= */
+:root {
+  --color-bg-start: #1e1b4b;      /* gradient start (deep indigo) */
+  --color-bg-end: #312e81;        /* gradient end */
+  --color-surface: #ffffff;       /* card background */
+  --color-text: #1f2937;          /* main text colour */
+  --color-text-muted: #6b7280;    /* softer grey text */
+  --color-border: #e5e7eb;        /* subtle lines and outlines */
+  --color-primary: #6366f1;       /* the brand purple-blue */
+  --color-primary-dark: #4f46e5;  /* darker shade, used on hover */
+  --radius: 12px;                 /* how round corners are */
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* soft floating shadow */
+  --space: 16px;                  /* one unit of spacing, reused everywhere */
+}
+
+/* =========================================================
+   2. GLOBAL RESET
+   Browsers add their own default margins. We zero them out
+   so we start from a clean, predictable base.
+   ========================================================= */
+* {
+  box-sizing: border-box;
+  /* Makes width include padding and border, so sizing math stays simple. */
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================================
+   3. PAGE BACKGROUND AND BASE TYPOGRAPHY
+   ========================================================= */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* The font stack: uses the nicest available system font. */
+
+  color: var(--color-text);
+  /* Uses the text colour variable defined above. */
+
+  background: linear-gradient(160deg, var(--color-bg-start), var(--color-bg-end));
+  /* A smooth colour blend from top-left to bottom-right. */
+
+  min-height: 100vh;
+  /* 100vh = 100% of the viewport (screen) height, so the gradient fills the screen. */
+
+  display: flex;
+  /* Turns on Flexbox, a layout mode for arranging children. */
+
+  align-items: center;
+  justify-content: center;
+  /* These two centre the .app card horizontally and vertically. */
+
+  padding: var(--space);
+  /* Breathing room so the card never touches the screen edge, especially on phones. */
+
+  line-height: 1.5;
+  /* Comfortable default spacing between lines of text. */
+}
+
+/* =========================================================
+   4. THE APP CARD
+   The white panel that holds everything.
+   ========================================================= */
+.app {
+  width: 100%;
+  max-width: 480px;
+  /* Full width on small screens, but never wider than 480px on desktop. */
+
+  background: var(--color-surface);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: calc(var(--space) * 1.75);
+  /* calc() does math; here it's 16px * 1.75 = 28px of inner padding. */
+
+  display: flex;
+  flex-direction: column;
+  /* Stacks the card's sections vertically. */
+
+  gap: var(--space);
+  /* Automatically puts 16px of space between each section. */
+}
+
+/* =========================================================
+   5. HEADER
+   ========================================================= */
+.header {
+  text-align: center;
+}
+
+.header__title {
+  font-size: 2rem;
+  /* rem is relative to the root font size — scales nicely with user settings. */
+  letter-spacing: -0.02em;
+  /* Slight negative spacing makes large text look tighter and more designed. */
+}
+
+.header__subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+}
+
+/* =========================================================
+   6. PANELS (the card-like sections inside the app)
+   ========================================================= */
+.panel {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space);
+}
+
+.panel__heading {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  /* Forces the heading into ALL CAPS for a small "label" look. */
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: calc(var(--space) * 0.5);
+}
+
+/* =========================================================
+   7. FORM ELEMENTS (label, input, buttons)
+   ========================================================= */
+.label {
+  display: block;
+  /* Labels are inline by default; "block" lets it sit on its own line. */
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: calc(var(--space) * 0.5);
+}
+
+.input-row {
+  display: flex;
+  gap: calc(var(--space) * 0.5);
+  /* Places the text field and Add button side by side with a small gap. */
+}
+
+.input {
+  flex: 1;
+  /* flex: 1 means "grow to fill all leftover space", so it stretches next to the button. */
+
+  min-width: 0;
+  /* IMPORTANT flexbox fix: flex items refuse to shrink below their content width
+     by default, which makes long placeholder text overflow. This allows shrinking. */
+
+  padding: 12px 14px;
+  font-size: 1rem;
+  font-family: inherit;
+  /* Inputs don't inherit fonts by default, so we ask them to. */
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  outline: none;
+  /* Removes the browser's default focus ring; we'll style our own below. */
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  /* :focus = while the user is typing in it. A soft glow makes it obvious which field is active. */
+}
+
+/* -- Shared button styles ------------------------------- */
+.button {
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  padding: 12px 18px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  /* turns the mouse into a pointing hand */
+  transition: transform 0.1s ease, background 0.2s ease;
+  /* Animates changes smoothly instead of jumping. */
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  /* Nudges the button up 1px on hover for a tactile feel. */
+}
+
+.button:active {
+  transform: translateY(0);
+  /* :active = while being clicked, so it presses back down. */
+}
+
+/* -- Button variants ------------------------------------ */
+.button--ghost {
+  background: transparent;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.button--ghost:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.button--primary {
+  background: var(--color-primary);
+  color: #ffffff;
+  width: 100%;
+  font-size: 1.125rem;
+  padding: 16px;
+}
+
+.button--primary:hover {
+  background: var(--color-primary-dark);
+}
+
+/* =========================================================
+   8. OPTIONS LIST (currently empty — JS fills it later)
+   ========================================================= */
+.option-list {
+  list-style: none;
+  /* Removes the default bullet points. */
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space) * 0.5);
+}
+
+.option-list:empty {
+  display: none;
+  /* Hides the list completely while it has no children,
+     so it doesn't add stray spacing above the placeholder message. */
+}
+
+.option-list li {
+  /* Styles each list item JavaScript will create. */
+  background: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 0.9375rem;
+}
+
+.empty-message {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+/* =========================================================
+   9. SPIN AREA
+   ========================================================= */
+.spin-area {
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================
+   10. RESULT AREA
+   ========================================================= */
+.result {
+  text-align: center;
+  background: #f5f3ff;
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--radius);
+  padding: var(--space);
+}
+
+.result__heading {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.result__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  word-break: break-word;
+  /* Long text wraps instead of overflowing the box and breaking the layout. */
+  margin-top: calc(var(--space) * 0.25);
+}
