@@ -1,110 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 <!-- Tells the browser this is a modern HTML5 document. -->
 
 <html lang="en">
-  <!-- The root element. lang="en" tells screen readers and browsers the page is in English. -->
+<!-- The root element. lang="en" tells screen readers and browsers the page is in English. -->
 
-  <head>
-    <!-- The <head> holds information ABOUT the page. Nothing here is shown on screen. -->
-    <meta charset="UTF-8" />
-    <!-- Character encoding: lets the page display symbols and accents correctly. -->
+<head>
+  <!-- The <head> holds information ABOUT the page. Nothing here is shown on screen. -->
+  <meta charset="UTF-8" />
+  <!-- Character encoding: lets the page display symbols and accents correctly. -->
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Makes the page scale properly on phones and tablets instead of looking tiny/zoomed out. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Makes the page scale properly on phones and tablets instead of looking tiny/zoomed out. -->
 
-    <title>Whim — Decision Roulette</title>
-    <!-- The text shown in the browser tab and in search results. -->
+  <title>Whim — Decision Roulette</title>
+  <!-- The text shown in the browser tab and in search results. -->
 
-    <link rel="stylesheet" href="style.css" />
-    <!-- This is the connection to your CSS file. Without this line, none of the styling appears. -->
-  </head>
+  <link rel="stylesheet" href="style.css" />
+  <!-- This is the connection to your CSS file. Without this line, none of the styling appears. -->
+</head>
 
-  <body>
-    <!-- Everything inside <body> is what the user actually sees. -->
+<body>
+  <!-- Everything inside <body> is what the user actually sees. -->
 
-    <main class="app">
-      <!-- <main> means "this is the primary content of the page" (good for accessibility).
+  <main class="app">
+    <!-- <main> means "this is the primary content of the page" (good for accessibility).
          The class="app" is a hook so CSS can target this element. -->
 
-      <!-- ===== 1. HEADER ===== -->
-      <header class="header">
-        <!-- <header> groups the page's introductory content. -->
-        <h1 class="header__title">Whim</h1>
-        <!-- <h1> is the single most important heading on the page. -->
+    <!-- ===== 1. HEADER ===== -->
+    <header class="header">
+      <!-- <header> groups the page's introductory content. -->
+      <h1 class="header__title">Whim</h1>
+      <!-- <h1> is the single most important heading on the page. -->
 
-        <p class="header__subtitle">Let chance make the decision.</p>
-        <!-- A short supporting line of text. -->
-      </header>
+      <p class="header__subtitle">Let chance make the decision.</p>
+      <!-- A short supporting line of text. -->
+    </header>
 
-      <!-- ===== 2. ADD AN OPTION ===== -->
-      <section class="panel">
-        <!-- <section> groups related content under a heading. .panel adds the "card" look. -->
-        <label class="label" for="option-input">Add an option</label>
-        <!-- <label> is a text description of an input.
+    <!-- ===== 2. ADD AN OPTION ===== -->
+    <section class="panel">
+      <!-- <section> groups related content under a heading. .panel adds the "card" look. -->
+      <label class="label" for="option-input">Add an option</label>
+      <!-- <label> is a text description of an input.
            for="option-input" links it to the input with id="option-input",
            so clicking the label focuses the input (and screen readers read it out). -->
 
-        <div class="input-row">
-          <!-- A plain container that places the input and the button side by side. -->
+      <div class="input-row">
+        <!-- A plain container that places the input and the button side by side. -->
 
-          <input
-            id="option-input"
-            class="input"
-            type="text"
-            placeholder="e.g. Pizza, Sushi, Tacos"
-            autocomplete="off"
-          />
-          <!-- <input type="text"> is a one-line text field where the user types an option.
+        <input
+          id="option-input"
+          class="input"
+          type="text"
+          placeholder="e.g. Pizza, Sushi, Tacos"
+          autocomplete="off"
+        />
+        <!-- <input type="text"> is a one-line text field where the user types an option.
              id="option-input" is the unique name JavaScript will use to grab this element.
              placeholder is the grey hint text shown when the field is empty. -->
 
-          <button id="add-button" class="button button--ghost" type="button">
-            Add
-          </button>
-          <!-- <button> is a clickable control.
+        <button id="add-button" class="button button--ghost" type="button">Add</button>
+        <!-- <button> is a clickable control.
              type="button" means "just a button" — it does NOT submit a form or reload the page.
              Right now it does nothing; JavaScript will give it behaviour later. -->
-        </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ===== 3. OPTIONS LIST ===== -->
-      <section class="panel">
-        <h2 class="panel__heading">Options</h2>
-        <!-- <h2> is a sub-heading, one level below <h1>. -->
+    <!-- ===== 3. OPTIONS LIST ===== -->
+    <section class="panel">
+      <h2 class="panel__heading">Options</h2>
+      <!-- <h2> is a sub-heading, one level below <h1>. -->
 
-        <ul id="options-list" class="option-list"></ul>
-        <!-- <ul> is an "unordered list" — a bullet-point list.
+      <ul id="options-list" class="option-list"></ul>
+      <!-- <ul> is an "unordered list" — a bullet-point list.
            It is deliberately EMPTY: JavaScript will insert <li> items here later.
            id="options-list" is the hook JavaScript will target. -->
 
-        <p id="empty-message" class="empty-message">
-          No options yet — add one above.
-        </p>
-        <!-- A friendly placeholder message shown while the list is empty.
+      <p id="empty-message" class="empty-message">No options yet — add one above.</p>
+      <!-- A friendly placeholder message shown while the list is empty.
            JavaScript will hide this once real options exist. -->
-      </section>
+    </section>
 
-      <!-- ===== 4. SPIN ===== -->
-      <section class="spin-area">
-        <button id="spin-button" class="button button--primary" type="button">
-          Spin
-        </button>
-        <!-- The main call-to-action. It looks bigger/brighter because of the
+    <!-- ===== 4. SPIN ===== -->
+    <section class="spin-area">
+      <button id="spin-button" class="button button--primary" type="button">Spin</button>
+      <!-- The main call-to-action. It looks bigger/brighter because of the
            "button--primary" class. Behaviour comes later with JavaScript. -->
-      </section>
+    </section>
 
-      <!-- ===== 5. RESULT ===== -->
-      <section class="result">
-        <h2 class="result__heading">Result</h2>
-        <!-- Heading labelling the result area. -->
+    <!-- ===== 5. RESULT ===== -->
+    <section class="result">
+      <h2 class="result__heading">Result</h2>
+      <!-- Heading labelling the result area. -->
 
-        <p id="result" class="result__value">—</p>
-        <!-- Where the winning option will appear.
+      <p id="result" class="result__value">—</p>
+      <!-- Where the winning option will appear.
            The em dash "—" is just a neutral placeholder for "nothing yet". -->
-      </section>
-    </main>
+    </section>
+  </main>
 
-    <script src="script.js"></script>
-    <!-- Loads your JavaScript file. It's empty for now, so the page is static. -->
-  </body>
+  <script src="script.js"></script>
+  <!-- Loads your JavaScript file. It's empty for now, so the page is static. -->
+</body>
 </html>
