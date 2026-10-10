@@ -1,8 +1,9 @@
 /* =========================================================
-   WHIM — option list logic
+   WHIM — option list + spin logic
    ---------------------------------------------------------
-   This file only handles ADDING and REMOVING options.
-   The spin / roulette wheel comes later.
+   Handles adding and removing options, and picking a random
+   winner when Spin is clicked.
+   The animated wheel comes later.
    ========================================================= */
 
 
@@ -21,6 +22,11 @@
    ========================================================= */
 const options = [];
 
+// The option that won the most recent spin.
+// `let` (not const) because it gets replaced on every spin.
+// It starts as null, which means "no spin has happened yet".
+let winner = null;
+
 
 /* =========================================================
    2. GRAB THE HTML ELEMENTS WE NEED
@@ -34,6 +40,8 @@ const addButton = document.getElementById("add-button");
 const list = document.getElementById("options-list");
 const emptyMessage = document.getElementById("empty-message");
 const message = document.getElementById("message");
+const spinButton = document.getElementById("spin-button");
+const result = document.getElementById("result");
 
 
 /* =========================================================
@@ -163,7 +171,40 @@ function render() {
 
 
 /* =========================================================
-   7. CONNECT THE EVENTS
+   7. spinWheel()
+   ---------------------------------------------------------
+   Runs when the user clicks "Spin". Picks one option at
+   random and shows it in the Result area.
+   ========================================================= */
+function spinWheel() {
+  // A spin needs at least two things to choose between.
+  // With 0 or 1 options there is nothing random about the
+  // answer, so we stop and explain why.
+  if (options.length < 2) {
+    showMessage("Add at least 2 options to spin.");
+    return; // stop running this function right here
+  }
+
+  // --- Step 1: get a random position in the array ---
+  //   Math.random()      -> a decimal from 0 up to (but never
+  //                         including) 1, e.g. 0.4271...
+  //   * options.length   -> stretches that range to cover the array,
+  //                         e.g. 0.4271 * 3 = 1.2813
+  //   Math.floor()       -> chops off the decimal, leaving a whole
+  //                         number that is a valid array position
+  //                         (0, 1 or 2 for a 3-item array)
+  const index = Math.floor(Math.random() * options.length);
+
+  // --- Step 2: look up the option at that position and store it ---
+  winner = options[index];
+
+  // --- Step 3: show the winner in the Result area ---
+  result.textContent = winner;
+}
+
+
+/* =========================================================
+   8. CONNECT THE EVENTS
    ---------------------------------------------------------
    addEventListener says: "when this happens, run this
    function." We pass the function name WITHOUT brackets,
@@ -182,9 +223,12 @@ input.addEventListener("keydown", function (event) {
   }
 });
 
+// Clicking the Spin button.
+spinButton.addEventListener("click", spinWheel);
+
 
 /* =========================================================
-   8. FIRST DRAW
+   9. FIRST DRAW
    ---------------------------------------------------------
    Run render() once when the page loads, so the list starts
    in a known, correct state (empty, with the hint visible).
