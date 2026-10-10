@@ -174,18 +174,15 @@ body {
   border-radius: var(--radius);
   cursor: pointer;
   /* turns the mouse into a pointing hand */
-  transition: transform 0.1s ease, background 0.2s ease;
+  transition: box-shadow 0.15s ease, background 0.15s ease;
   /* Animates changes smoothly instead of jumping. */
 }
 
 .button:hover {
-  transform: translateY(-1px);
-  /* Nudges the button up 1px on hover for a tactile feel. */
-}
-
-.button:active {
-  transform: translateY(0);
-  /* :active = while being clicked, so it presses back down. */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  /* A soft shadow "lift" on hover. We deliberately do NOT move the button
+     with transform here: if a hovered element shifts position, it can slide
+     out from under the cursor and flicker between hovered/unhovered. */
 }
 
 /* -- Button variants ------------------------------------ */
@@ -235,6 +232,60 @@ body {
   border-radius: var(--radius);
   padding: 10px 14px;
   font-size: 0.9375rem;
+
+  display: flex;
+  /* Puts the option text and its remove button on one line. */
+  align-items: center;
+  /* Vertically centres them. */
+  justify-content: space-between;
+  /* Pushes the text left and the button right. */
+  gap: calc(var(--space) * 0.5);
+}
+
+.option-list li span {
+  /* The option text. min-width: 0 lets long text wrap instead of
+     shoving the remove button out of the row. */
+  min-width: 0;
+  word-break: break-word;
+}
+
+.remove-button {
+  /* The small "✕" beside each option. */
+  flex-shrink: 0;
+  /* Never let it get squashed by long option text. */
+
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  /* 50% on a square makes a perfect circle. */
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.remove-button:hover {
+  background: #fee2e2;
+  /* Soft red background on hover signals "this deletes something". */
+  color: #dc2626;
+}
+
+.message {
+  /* Feedback line for rejected entries (empty/duplicate). */
+  color: #dc2626;
+  font-size: 0.8125rem;
+  min-height: 1.2em;
+  /* Reserves a line's worth of space so the layout doesn't jump
+     when a message appears or disappears. */
+  margin-top: calc(var(--space) * 0.5);
 }
 
 .empty-message {
