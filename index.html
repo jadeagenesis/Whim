@@ -88,13 +88,29 @@
            JavaScript will hide this once real options exist. -->
       </section>
 
-      <!-- ===== 4. SPIN ===== -->
+      <!-- ===== 4. WHEEL + SPIN ===== -->
       <section class="spin-area">
+        <!-- .wheel-stage groups the wheel and the pointer so the pointer can be
+             positioned relative to the wheel. -->
+        <div class="wheel-stage">
+          <!-- The pointer sits on the stage, NOT inside .wheel, so it stays
+               still while the wheel turns beneath it. aria-hidden tells screen
+               readers to ignore it, since it is purely decorative. -->
+          <div class="pointer" aria-hidden="true"></div>
+
+          <!-- The wheel rotates as one solid piece: the slices (painted by
+               JavaScript as a conic-gradient) and the text labels on them. -->
+          <div id="wheel" class="wheel wheel--empty">
+            <div id="wheel-labels" class="wheel__labels"></div>
+            <!-- Starts empty. JavaScript fills it with one text label per slice. -->
+          </div>
+        </div>
+
         <button id="spin-button" class="button button--primary" type="button">
           Spin
         </button>
-        <!-- The main call-to-action. It looks bigger/brighter because of the
-           "button--primary" class. Behaviour comes later with JavaScript. -->
+        <!-- The main call-to-action. JavaScript disables it while the wheel
+             is turning so you can't start a second spin mid-animation. -->
       </section>
 
       <!-- ===== 5. RESULT ===== -->
@@ -102,9 +118,10 @@
         <h2 class="result__heading">Result</h2>
         <!-- Heading labelling the result area. -->
 
-        <p id="result" class="result__value">—</p>
-        <!-- Where the winning option will appear.
-           The em dash "—" is just a neutral placeholder for "nothing yet". -->
+        <p id="result" class="result__value" aria-live="polite">—</p>
+        <!-- Where the winning option appears, once the wheel has stopped.
+             aria-live="polite" tells screen readers to announce the text
+             when it changes, without interrupting whatever is being read. -->
       </section>
     </main>
 

@@ -48,9 +48,12 @@ body {
   display: flex;
   /* Turns on Flexbox, a layout mode for arranging children. */
 
-  align-items: center;
-  justify-content: center;
-  /* These two centre the .app card horizontally and vertically. */
+  /* NOTE: we deliberately do NOT use align-items/justify-content here.
+     Instead the card centres itself with "margin: auto" (see .app below).
+     The reason: align-items:center pushes a too-tall element off BOTH the
+     top and bottom of the screen, and the top half can't be scrolled to.
+     Auto margins centre the card when it fits, and quietly step aside to
+     let the page scroll when it doesn't. */
 
   padding: var(--space);
   /* Breathing room so the card never touches the screen edge, especially on phones. */
@@ -67,6 +70,11 @@ body {
   width: 100%;
   max-width: 480px;
   /* Full width on small screens, but never wider than 480px on desktop. */
+
+  margin: auto;
+  /* Auto margins on a flex item centre it both horizontally and vertically,
+     while still allowing the page to scroll if the card is taller than the
+     screen. This is the "safe centring" trick. */
 
   background: var(--color-surface);
   border-radius: 20px;
@@ -178,11 +186,19 @@ body {
   /* Animates changes smoothly instead of jumping. */
 }
 
-.button:hover {
+.button:hover:not(:disabled) {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   /* A soft shadow "lift" on hover. We deliberately do NOT move the button
      with transform here: if a hovered element shifts position, it can slide
-     out from under the cursor and flicker between hovered/unhovered. */
+     out from under the cursor and flicker between hovered/unhovered.
+     ":not(:disabled)" stops the lift appearing on a disabled button. */
+}
+
+.button:disabled {
+  opacity: 0.5;
+  /* Fades the button so it looks switched off. */
+  cursor: not-allowed;
+  /* The mouse shows a "no entry" cursor instead of a pointing hand. */
 }
 
 /* -- Button variants ------------------------------------ */
@@ -204,7 +220,7 @@ body {
   padding: 16px;
 }
 
-.button--primary:hover {
+.button--primary:hover:not(:disabled) {
   background: var(--color-primary-dark);
 }
 
@@ -295,11 +311,140 @@ body {
 }
 
 /* =========================================================
-   9. SPIN AREA
+   9. WHEEL + SPIN AREA
    ========================================================= */
 .spin-area {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  /* Centres the wheel and the button horizontally. */
+  gap: calc(var(--space) * 1.25);
+  padding-top: calc(var(--space) * 0.5);
+  /* A little extra room up top, because the pointer pokes above the wheel. */
+}
+
+.wheel-stage {
+  position: relative;
+  /* Establishes the reference point the pointer is positioned against. */
+
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+  /* Stops the flex parent from squashing the circle into an oval. */
+}
+
+/* -- The rotating disc ---------------------------------- */
+.wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  /* 50% on a square makes a perfect circle, which is what clips the
+     conic-gradient (and the labels) into a round shape. */
+
+  border: 6px solid #ffffff;
+  /* A white rim, like the edge of a real wheel. */
+
+  box-shadow: var(--shadow), inset 0 0 0 1px var(--color-border);
+
+  position: relative;
+  overflow: hidden;
+  /* Anything that sticks out past the circle gets trimmed off. */
+
+  transform: rotate(0deg);
+  /* An explicit starting angle. The very first spin needs a concrete
+     value to animate FROM — transitioning from "none" is unreliable. */
+
+  transition: transform 4s cubic-bezier(0.12, 0.72, 0.16, 1);
+  /* This single line IS the animation. The easing curve starts fast and
+     finishes slowly, which is what makes it feel like a wheel losing
+     momentum. JavaScript only ever sets the final angle. */
+}
+
+/* -- The placeholder circle (< 2 options) ---------------- */
+.wheel--empty {
+  background: #eef2ff;
+  border-style: dashed;
+  border-color: #c7d2fe;
+  box-shadow: none;
+}
+
+/* -- The fixed marker at 12 o'clock ---------------------- */
+.pointer {
+  position: absolute;
+  top: -12px;
+  /* Sits just above the rim. */
+  left: 50%;
+  transform: translateX(-50%);
+  /* translateX(-50%) pulls it back by half its own width, which is how you
+     centre something with absolute positioning. */
+
+  z-index: 2;
+  /* Keeps it drawn on top of the wheel. */
+
+  width: 0;
+  height: 0;
+  /* The classic CSS triangle: a zero-sized box where the left and right
+     borders are transparent and only the top border is coloured. That
+     leaves a solid downward-pointing triangle. */
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 22px solid #e11d48;
+
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+}
+
+/* -- The text labels sitting on the slices --------------- */
+.wheel__labels {
+  position: absolute;
+  inset: 0;
+  /* Covers the inside of the circle. This container does not rotate;
+     each label inside it does its own rotating. */
+  pointer-events: none;
+  /* Labels are decoration, so clicks pass straight through to the wheel. */
+}
+
+.wheel__label {
+  position: absolute;
+  inset: 0;
+  /* Every label is a full-size, invisible strip that covers the whole
+     circle — think of it as a clock hand. */
+
+  display: flex;
+  justify-content: center;
+  /* Centres the text along the strip's length. */
+  align-items: flex-start;
+  /* Pins the text to the outer end of the strip (the rim). */
+  padding-top: 16px;
+  /* How far in from the rim the text sits. */
+
+  transform: rotate(var(--angle));
+  /* Rotating the strip swings the text around the wheel's centre. Because
+     a transform rotates around the element's own centre by default, and the
+     strip's centre IS the wheel's centre, this lands the text exactly in the
+     middle of its slice. JavaScript sets --angle to that slice's midpoint. */
+}
+
+.wheel__label span {
+  display: block;
+  max-width: 55%;
+  /* Stops a long option name spilling into the neighbouring slices. */
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  /* White text needs a shadow to stay readable on lighter slice colours. */
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* Cut long names off with "…" instead of wrapping onto several lines. */
+
+  transform: rotate(calc(-1 * var(--angle)));
+  /* Undoes the strip's rotation (note the minus sign) so the text reads
+     upright instead of spinning upside-down with the wheel. */
 }
 
 /* =========================================================
