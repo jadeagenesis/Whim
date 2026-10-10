@@ -172,6 +172,12 @@ body {
   /* :focus = while the user is typing in it. A soft glow makes it obvious which field is active. */
 }
 
+.input--full {
+  width: 100%;
+  /* With no button next to it, this field has no flex row to stretch it,
+     so it asks for the full width of the panel directly. */
+}
+
 /* -- Shared button styles ------------------------------- */
 .button {
   font-size: 1rem;
@@ -443,8 +449,13 @@ body {
   /* Cut long names off with "…" instead of wrapping onto several lines. */
 
   transform: rotate(calc(-1 * var(--angle)));
-  /* Undoes the strip's rotation (note the minus sign) so the text reads
-     upright instead of spinning upside-down with the wheel. */
+  /* Undoes the strip's OWN rotation (note the minus sign), so the text is
+     upright while the wheel is sitting still.
+
+     Worth knowing: this cancels the label's angle, not the wheel's rotation.
+     Once the wheel has spun, the labels turn with it — the same way text
+     painted on a real prize wheel behaves. The winner is always readable
+     in the Result panel below, which is where people actually look. */
 }
 
 /* =========================================================
@@ -463,6 +474,18 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-text-muted);
+}
+
+.result__question {
+  /* The decision question, shown as a small line above the winner. */
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-top: calc(var(--space) * 0.5);
+
+  /* NOTE: we deliberately do NOT set "display" here. The element uses the
+     HTML "hidden" attribute to show and hide, and the browser's built-in
+     [hidden] rule only wins while no other display value is declared.
+     Adding display:block below would quietly break the hiding. */
 }
 
 .result__value {

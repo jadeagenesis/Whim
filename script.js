@@ -1,9 +1,8 @@
 /* =========================================================
-   WHIM — option list + spin logic
+   WHIM — question + option list + spin logic
    ---------------------------------------------------------
-   Handles adding and removing options, and picking a random
-   winner when Spin is clicked.
-   The animated wheel comes later.
+   Handles the decision question, adding and removing
+   options, and spinning the wheel to pick a random winner.
    ========================================================= */
 
 
@@ -21,6 +20,12 @@
    We still change its CONTENTS with push() and splice().
    ========================================================= */
 const options = [];
+
+// What the user is trying to decide, e.g. "Where should we go for the
+// holiday?". It is read from the question input box and kept up to date
+// by the "input" listener near the bottom of this file.
+// An empty string means the user hasn't typed a question.
+let question = "";
 
 // The option that won the most recent spin.
 // `let` (not const) because it gets replaced on every spin.
@@ -75,6 +80,8 @@ const spinButton = document.getElementById("spin-button");
 const result = document.getElementById("result");
 const wheel = document.getElementById("wheel");
 const wheelLabels = document.getElementById("wheel-labels");
+const questionInput = document.getElementById("question-input");
+const resultQuestion = document.getElementById("result-question");
 
 
 /* =========================================================
@@ -368,6 +375,17 @@ function finishSpin() {
   isSpinning = false;
   spinButton.disabled = false; // the button is usable again
 
+  // Show the question above the winner — but only if one was typed.
+  // If `question` is an empty string, we hide the line completely, so an
+  // empty question shows just the winner and no blank line above it.
+  if (question === "") {
+    resultQuestion.textContent = "";
+    resultQuestion.hidden = true;
+  } else {
+    resultQuestion.textContent = question;
+    resultQuestion.hidden = false;
+  }
+
   // Only NOW do we reveal the winner, so the result appears at the
   // same moment the wheel settles.
   result.textContent = winner;
@@ -389,6 +407,17 @@ function finishSpin() {
 
 // Clicking the Add button.
 addButton.addEventListener("click", addOption);
+
+// Typing in the question box keeps the `question` variable up to date.
+// We use "input" rather than "change": "input" fires on EVERY keystroke
+// (and on paste and cut), while "change" only fires once the field loses
+// focus — which would be far too late for us.
+questionInput.addEventListener("input", function () {
+  // .value is the text currently in the box.
+  // .trim() drops any spaces at the start or end, so a box containing
+  // only spaces counts as an empty question.
+  question = questionInput.value.trim();
+});
 
 // Pressing Enter while typing in the input.
 input.addEventListener("keydown", function (event) {

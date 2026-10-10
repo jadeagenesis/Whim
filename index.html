@@ -36,7 +36,30 @@
         <!-- A short supporting line of text. -->
       </header>
 
-      <!-- ===== 2. ADD AN OPTION ===== -->
+      <!-- ===== 2. THE DECISION QUESTION ===== -->
+      <section class="panel">
+        <!-- The question gives the spin some context ("Where should we go
+             for the holiday?"). It is not needed for the wheel to work —
+             it is just shown again above the winner once the wheel stops.
+             It sits above the options so it reads as the frame for
+             everything that follows. -->
+        <label class="label" for="question-input">What are you deciding?</label>
+        <!-- for="question-input" links this label to the input below,
+             so clicking the label focuses the field. -->
+
+        <input
+          id="question-input"
+          class="input input--full"
+          type="text"
+          placeholder="e.g. Where should we go for the holiday?"
+          autocomplete="off"
+        />
+        <!-- id="question-input" is the hook JavaScript uses to read what the
+             user types. The "input--full" class makes it fill the panel
+             width, because there is no button beside it to share a row with. -->
+      </section>
+
+      <!-- ===== 3. ADD AN OPTION ===== -->
       <section class="panel">
         <!-- <section> groups related content under a heading. .panel adds the "card" look. -->
         <label class="label" for="option-input">Add an option</label>
@@ -71,7 +94,7 @@
            (e.g. "Type something first.") when an entry is rejected. -->
       </section>
 
-      <!-- ===== 3. OPTIONS LIST ===== -->
+      <!-- ===== 4. OPTIONS LIST ===== -->
       <section class="panel">
         <h2 class="panel__heading">Options</h2>
         <!-- <h2> is a sub-heading, one level below <h1>. -->
@@ -88,7 +111,7 @@
            JavaScript will hide this once real options exist. -->
       </section>
 
-      <!-- ===== 4. WHEEL + SPIN ===== -->
+      <!-- ===== 5. WHEEL + SPIN ===== -->
       <section class="spin-area">
         <!-- .wheel-stage groups the wheel and the pointer so the pointer can be
              positioned relative to the wheel. -->
@@ -113,15 +136,23 @@
              is turning so you can't start a second spin mid-animation. -->
       </section>
 
-      <!-- ===== 5. RESULT ===== -->
+      <!-- ===== 6. RESULT ===== -->
       <section class="result">
         <h2 class="result__heading">Result</h2>
         <!-- Heading labelling the result area. -->
 
+        <p id="result-question" class="result__question" hidden></p>
+        <!-- A small line showing the decision question, e.g. "Where should
+             we go for the holiday?". It starts hidden and stays hidden
+             unless the user actually typed a question — that way, an empty
+             question shows nothing at all rather than a blank line. -->
+
         <p id="result" class="result__value" aria-live="polite">—</p>
         <!-- Where the winning option appears, once the wheel has stopped.
              aria-live="polite" tells screen readers to announce the text
-             when it changes, without interrupting whatever is being read. -->
+             when it changes, without interrupting whatever is being read.
+             Only this line is announced: the user already knows the
+             question, because they typed it. -->
       </section>
     </main>
 
